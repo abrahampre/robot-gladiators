@@ -5,6 +5,7 @@ var playerMoney = 10;
 
 //you can also log multiple values at once like this console
 console.log(playerName,playerAttack,playerHealth,playerMoney);
+
 var enemyNames = ["Roborto", "Amy Android", "Robo Trumble"];
 var enemyHealth = 50;
 var enemyAttack = 12;
@@ -24,13 +25,17 @@ var fight = function(enemyName){
       if(confirmSkip){
         window.alert(playerName + " has decided to skup this fight. Goodbye!")
         //substract money
-        playerMoney = playerMoney-10;
+        playerMoney = Math.max(0, playerMoney-10)
         console.log("player money", playerMoney);
         break;
       }
     }
     //Remove enemys health by sustracting the amount set in playerAttack
-    enemyHealth= enemyHealth-playerAttack;
+   
+    //generate random damage value based on players attack power
+    var damage = randomNumber(playerAttack-3,playerAttack);
+    enemyHealth=Math.max(0,enemyHealth-damage);
+
     console.log (playerName+ " attacked "+ enemyName +". "+ enemyName + " now has " +enemyHealth + " health remaining.");
             
     //Check enemys health
@@ -46,8 +51,9 @@ var fight = function(enemyName){
     /*Substract the value of 'enemyAttack' from the value of 
     'playerHealth' and use the result to update the value in
     the 'playerHealth' variable*/
+    var damage = randomNumber(enemyAttack -3, enemyAttack);
+    playerHealth = Math.max (0, playerHealth-damage);
     
-    playerHealth=playerHealth-enemyAttack;
     console.log(enemyName+" attacked "+playerName +". " +playerName+ " now has " +playerHealth+ " health remaining.");
         
     //Check players health
@@ -76,20 +82,10 @@ var startGame =function(){
             var pickedEnemyName = enemyNames[i];
 
             //reset enemy health before starting a new fight
-            enemyHealth=50;
+            enemyHealth= randomNumber(40, 60);
 
             //pass the picked enemyname variables value into the fight funciton
             fight(pickedEnemyName);
-
-            //if were not at the laste enemy in teh array
-            if(playerHealth> 0 && i<enemyNames.length- 1){
-                //ask if player wants to use the store before next round
-                var storeConfirm = window.confirm("The fight is over, visit the store before the next round? ")
-                //if yes, take them to the store() function
-                if (storeConfirm) {
-                    shop();
-                }
-            }
         }else{
         window.alert("You have lost your robot in battle!GAME OVER!!");
         break;
@@ -110,7 +106,7 @@ var startGame =function(){
      window.alert("The game has now ended. Lets see how you did!");
      }
 
-     var playAgainConfirm = window.confirm("would you like to play again?");
+     var playAgainConfirm = window.confirm("would you like to play again?")
      
      if(playAgainConfirm){
          startGame();
@@ -119,51 +115,12 @@ var startGame =function(){
          window.alert("Thank you for playing Robot Gladiator! Come back soon!");
      }
  }
-var shop = function(){
-    var shopOptionPromt = window.prompt("will you like to REFILL your health, UPGRADE your attak or LEAVE the store? Please enter one: 'REFILL', 'UPGRADE' or 'LEAVE' to make a choice");
+var randomNumber = function(min, max){
+    var value = Math.floor(Math.random()*(max-min+1)+min);
 
-    //Use switch to carry out action
-    switch(shopOptionPromt){
-        case "REFILL"://WILL GO WITH NEXT CASE
-        case "refill":
-            if (playerMoney>=7){
-                window.alert("Refilling players health by 20 for 7 dollars.");
-                
-                //incrfease health and decrease money
+    return value;
+};
 
-                playerHealth = playerHealth+20;
-                playerMoney = playerMoney-7;
-            }
-            else{
-                window.alert("You dont have enough money!")
-            }
-            break;
-        case "UPGRADE": //WILL GO WITH NEXT CASE
-        case "upgrade":
-            if(playerMoney>=7){
-                window.alert("Upgradings players attack by 6 for 7 dollars");
-
-                //increase attack and decrease money
-                playerAttack=playerAttack+6;
-                playerMoney = playerMoney-7;
-            }
-            else{
-                window.alert("You dont have enough money!")
-            }
-                break
-        case "LEAVE": //WILL GO TO NEXT CASE
-        case "leave":
-            window.alert("Leaving store.");
-
-            //leaving store
-            break;
-        default:
-            window.alert("You did not pick a valid option. Try again");
-            shop();
-            break;
-    }
-
-}
 
 
  //start game when page loads
